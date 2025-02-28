@@ -5,6 +5,16 @@ from . import crud, models, schemas, database
 
 app = FastAPI()
 
+@app.delete("/equipments/{equipment_id}")
+def delete_equipment(equipment_id: int, db: Session = Depends(database.get_db)):
+    equipment = db.query(models.Equipment).filter(models.Equipment.id == equipment_id).first()
+    if not equipment:
+        raise HTTPException(status_code=404, detail="Equipment not found")
+    db.delete(equipment)
+    db.commit()
+    return {"message": "Equipment deleted successfully"}
+
+
 # Разрешаем доступ с localhost:3000 (или другого домена)
 app.add_middleware(
     CORSMiddleware,

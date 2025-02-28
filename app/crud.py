@@ -47,3 +47,13 @@ def get_equipment_list(db: Session, skip: int = 0, limit: int = 10):
     Функция для получения списка оборудования из базы данных с поддержкой пагинации
     """
     return db.query(models.Equipment).offset(skip).limit(limit).all()
+
+# crud.py
+
+def delete_equipment(db: Session, equipment_id: int):
+    equipment = db.query(models.Equipment).filter(models.Equipment.id == equipment_id).first()
+    if equipment:
+        db.delete(equipment)
+        db.commit()
+        return equipment
+    return None
